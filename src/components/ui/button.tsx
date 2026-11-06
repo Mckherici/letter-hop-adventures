@@ -16,8 +16,21 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        candyPink:
+          "candy [--candy:var(--primary)] text-primary-foreground font-display font-bold border-4 border-ink",
+        candySun:
+          "candy [--candy:var(--sunny)] text-ink font-display font-bold border-4 border-ink",
+        candySky:
+          "candy [--candy:var(--accent)] text-accent-foreground font-display font-bold border-4 border-ink",
+        candyGrass:
+          "candy [--candy:var(--success)] text-success-foreground font-display font-bold border-4 border-ink",
+        candyPaper:
+          "candy [--candy:var(--paper)] text-ink font-display font-bold border-4 border-ink",
       },
       size: {
+        jumbo: "h-20 rounded-3xl px-10 text-3xl [&_svg]:size-8",
+        big: "h-16 rounded-2xl px-7 text-2xl [&_svg]:size-7",
+        bubble: "h-16 w-16 rounded-full text-2xl [&_svg]:size-8",
         default: "h-9 px-4 py-2",
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
