@@ -79,8 +79,7 @@ function StickerBook() {
                 onClick={() => have && sfx.sparkle()}
                 initial={{ scale: 0, rotate: -20 }}
                 animate={{ scale: 1, rotate: have ? (i % 2 ? 3 : -3) : 0 }}
-                whileHover={have ? { scale: 1.08, rotate: 0 } : undefined}
-                whileTap={have ? { scale: 0.9, rotate: 12 } : undefined}
+                {...(have ? { whileHover: { scale: 1.08, rotate: 0 }, whileTap: { scale: 0.9, rotate: 12 } } : {})}
                 transition={{ type: "spring", stiffness: 300, damping: 14, delay: i * 0.05 }}
                 className={cn(
                   "flex aspect-square flex-col items-center justify-center gap-1 rounded-[1.75rem] border-4 border-ink p-3",

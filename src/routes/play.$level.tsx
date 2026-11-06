@@ -66,7 +66,7 @@ export const Route = createFileRoute("/play/$level")({
 
 const CHEERS = ["Amazing!", "You did it!", "Super speller!", "Wow, brilliant!", "High five! ✋"];
 const OOPS = ["Oops! Try again!", "So close!", "Almost! Have another go!"];
-const pick = (list: string[]) => list[Math.floor(Math.random() * list.length)];
+const pick = (list: string[]) => list[Math.floor(Math.random() * list.length)] ?? list[0] ?? "";
 
 type Status = "playing" | "correct" | "wrong" | "over" | "done";
 
@@ -165,7 +165,7 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
   useEffect(() => {
     const round = pickRoundWords(level);
     setWords(round);
-    startWord(round[0]);
+    if (round[0]) startWord(round[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -213,16 +213,18 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
           sfx.fanfare();
           speak("Hooray! You finished the round!");
         } else {
+          const nextWord = words[index + 1];
           setIndex(index + 1);
-          startWord(words[index + 1]);
+          if (nextWord) startWord(nextWord);
         }
       };
 
-      if (unlocked.length) {
+      const prize = unlocked[unlocked.length - 1];
+      if (prize) {
         later(() => {
-          setNewSticker(unlocked[unlocked.length - 1]);
+          setNewSticker(prize);
           sfx.fanfare();
-          speak(`New sticker! ${unlocked[unlocked.length - 1].name}!`);
+          speak(`New sticker! ${prize.name}!`);
         }, 1600);
         // advance happens when the sticker popup is closed
         pendingAdvance.current = advance;
@@ -282,6 +284,7 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
     const i = slots.findIndex((id, idx) => !locked[idx] && (!id || tileById.get(id)!.letter !== word.word[idx]));
     if (i < 0) return;
     const needed = word.word[i];
+    if (!needed) return;
     const next = [...slots];
     // Free a matching tile if it's sitting in a wrong unlocked slot.
     let tile = tiles.find((t) => t.letter === needed && !usedIds.has(t.id));
@@ -321,6 +324,8 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
   };
 
   if (!word) return <Loading />;
+
+  const nextLevel = LEVELS[LEVELS.findIndex((l) => l.id === level.id) + 1];
 
   const progressPct = ((index + (status === "correct" || status === "done" ? 1 : 0)) / words.length) * 100;
 
@@ -558,7 +563,7 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
         <Button variant="candySun" size="big" onClick={giveHint} disabled={status !== "playing"}>
           <Lightbulb /> Hint
         </Button>
-        <Mascot mood={mood} message={undefined} size="sm" className="md:hidden" />
+        <Mascot mood={mood} size="sm" className="md:hidden" />
       </div>
 
       <AnimatePresence>
@@ -570,7 +575,7 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
             stars={roundStars}
             streak={bestRunStreak}
             onRestart={onRestart}
-            nextLevel={LEVELS[LEVELS.findIndex((l) => l.id === level.id) + 1]}
+            {...(nextLevel ? { nextLevel } : {})}
             totalStars={starsRef.current}
           />
         )}
@@ -630,7 +635,7 @@ function LetterTile({
           .elementsFromPoint(e.clientX, e.clientY)
           .map((el) => (el as HTMLElement).closest<HTMLElement>("[data-slot-index]"))
           .find(Boolean);
-        if (hit) onPlace(tile.id, Number(hit.dataset.slotIndex));
+        if (hit) onPlace(tile.id, Number(hit.dataset["slotIndex"]));
       }}
       className={cn(
         "candy relative flex h-16 w-16 touch-none cursor-grab items-center justify-center rounded-2xl border-4 border-ink font-display text-4xl font-bold uppercase active:cursor-grabbing md:h-20 md:w-20 md:text-5xl",

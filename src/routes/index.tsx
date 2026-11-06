@@ -87,8 +87,7 @@ function Home() {
             <motion.div
               initial={{ y: 60, opacity: 0, rotate: i === 1 ? 0 : i === 0 ? -3 : 3 }}
               animate={{ y: 0, opacity: 1 }}
-              whileHover={open ? { y: -8, rotate: 0, scale: 1.03 } : undefined}
-              whileTap={open ? { scale: 0.96 } : undefined}
+              {...(open ? { whileHover: { y: -8, rotate: 0, scale: 1.03 }, whileTap: { scale: 0.96 } } : {})}
               transition={{ type: "spring", stiffness: 260, damping: 16, delay: 0.2 + i * 0.12 }}
               className={cn(
                 "candy relative flex h-full flex-col items-center gap-1 rounded-[2rem] border-[5px] border-ink px-6 py-6 text-primary-foreground",
