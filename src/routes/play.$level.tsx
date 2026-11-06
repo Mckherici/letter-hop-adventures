@@ -124,6 +124,7 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
   const [muted, setMutedState] = useState(false);
   const starsRef = useRef(totalStars);
   const timers = useRef<number[]>([]);
+  const pendingAdvance = useRef<(() => void) | null>(null);
 
   const word = words[index];
   const tileById = useMemo(() => new Map(tiles.map((t) => [t.id, t])), [tiles]);
@@ -257,8 +258,6 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
     }
   };
 
-  const pendingAdvance = useRef<(() => void) | null>(null);
-
   const placeTile = (tileId: string, slotIndex?: number) => {
     if (status !== "playing" || usedIds.has(tileId)) return;
     const target = slotIndex ?? slots.findIndex((s) => s === null);
@@ -278,7 +277,7 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
     sfx.unpop();
   };
 
-  const useHint = () => {
+  const giveHint = () => {
     if (status !== "playing" || !word) return;
     const i = slots.findIndex((id, idx) => !locked[idx] && (!id || tileById.get(id)!.letter !== word.word[idx]));
     if (i < 0) return;
@@ -417,11 +416,7 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
             >
               <motion.div
                 aria-hidden
-                className="absolute inset-[-40%] opacity-30"
-                style={{
-                  background:
-                    "repeating-conic-gradient(var(--sunny) 0deg 15deg, var(--paper) 15deg 30deg)",
-                }}
+                className="bg-sunburst absolute inset-[-40%] opacity-30"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
               />
@@ -560,7 +555,7 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
       </section>
 
       <div className="mx-auto mt-6 flex max-w-5xl justify-center gap-3">
-        <Button variant="candySun" size="big" onClick={useHint} disabled={status !== "playing"}>
+        <Button variant="candySun" size="big" onClick={giveHint} disabled={status !== "playing"}>
           <Lightbulb /> Hint
         </Button>
         <Mascot mood={mood} message={undefined} size="sm" className="md:hidden" />

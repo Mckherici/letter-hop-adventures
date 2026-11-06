@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as StickersRouteImport } from './routes/stickers'
+import { Route as PlayLevelRouteImport } from './routes/play.$level'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const StickersRoute = StickersRouteImport.update({
   path: '/stickers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlayLevelRoute = PlayLevelRouteImport.update({
+  id: '/play/$level',
+  path: '/play/$level',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/stickers': typeof StickersRoute
+  '/play/$level': typeof PlayLevelRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/stickers': typeof StickersRoute
+  '/play/$level': typeof PlayLevelRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/stickers': typeof StickersRoute
+  '/play/$level': typeof PlayLevelRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/stickers'
+  fullPaths: '/' | '/stickers' | '/play/$level'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/stickers'
-  id: '__root__' | '/' | '/stickers'
+  to: '/' | '/stickers' | '/play/$level'
+  id: '__root__' | '/' | '/stickers' | '/play/$level'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   StickersRoute: typeof StickersRoute
+  PlayLevelRoute: typeof PlayLevelRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StickersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/play/$level': {
+      id: '/play/$level'
+      path: '/play/$level'
+      fullPath: '/play/$level'
+      preLoaderRoute: typeof PlayLevelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   StickersRoute: StickersRoute,
+  PlayLevelRoute: PlayLevelRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
