@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CharacterRouteImport } from './routes/character'
 import { Route as StickersRouteImport } from './routes/stickers'
 import { Route as PlayLevelRouteImport } from './routes/play.$level'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CharacterRoute = CharacterRouteImport.update({
+  id: '/character',
+  path: '/character',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StickersRoute = StickersRouteImport.update({
@@ -31,30 +37,34 @@ const PlayLevelRoute = PlayLevelRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/character': typeof CharacterRoute
   '/stickers': typeof StickersRoute
   '/play/$level': typeof PlayLevelRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/character': typeof CharacterRoute
   '/stickers': typeof StickersRoute
   '/play/$level': typeof PlayLevelRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/character': typeof CharacterRoute
   '/stickers': typeof StickersRoute
   '/play/$level': typeof PlayLevelRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/stickers' | '/play/$level'
+  fullPaths: '/' | '/character' | '/stickers' | '/play/$level'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/stickers' | '/play/$level'
-  id: '__root__' | '/' | '/stickers' | '/play/$level'
+  to: '/' | '/character' | '/stickers' | '/play/$level'
+  id: '__root__' | '/' | '/character' | '/stickers' | '/play/$level'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CharacterRoute: typeof CharacterRoute
   StickersRoute: typeof StickersRoute
   PlayLevelRoute: typeof PlayLevelRoute
 }
@@ -66,6 +76,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/character': {
+      id: '/character'
+      path: '/character'
+      fullPath: '/character'
+      preLoaderRoute: typeof CharacterRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/stickers': {
@@ -87,6 +104,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CharacterRoute: CharacterRoute,
   StickersRoute: StickersRoute,
   PlayLevelRoute: PlayLevelRoute,
 }
