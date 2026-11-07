@@ -28,3 +28,7 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules
+
+- Word pictures are image files under `src/assets/words/<word>.png.asset.json`, looked up by word in `src/lib/wordPictures.ts`; never render the `emoji` field as the word picture, because emoji glyphs show as black boxes on some devices. Every new word needs a matching picture file (enforced by `src/test/word-pictures.test.ts`).
