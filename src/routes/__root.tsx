@@ -123,6 +123,21 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  // If a page chunk fails to load (e.g. after an update or server restart),
+  // reload once instead of leaving a blank screen.
+  useEffect(() => {
+    const KEY = "chunk-reload-at";
+    const onPreloadError = (event: Event) => {
+      const last = Number(sessionStorage.getItem(KEY) ?? 0);
+      if (Date.now() - last < 10_000) return;
+      event.preventDefault();
+      sessionStorage.setItem(KEY, String(Date.now()));
+      window.location.reload();
+    };
+    window.addEventListener("vite:preloadError", onPreloadError);
+    return () => window.removeEventListener("vite:preloadError", onPreloadError);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
