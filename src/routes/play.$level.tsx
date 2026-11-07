@@ -425,15 +425,13 @@ function Game({ level, totalStars, onWordWon, onRestart }: GameProps) {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
               />
-              <motion.span
-                className="relative select-none text-[8rem] leading-none drop-shadow-lg md:text-[10rem]"
+              <motion.div
+                className="relative select-none drop-shadow-lg"
                 animate={{ y: [0, -10, 0], rotate: [-3, 3, -3] }}
                 transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-                role="img"
-                aria-label={word.word}
               >
-                {word.emoji}
-              </motion.span>
+                <WordPicture word={word.word} className="h-40 w-40 md:h-52 md:w-52" />
+              </motion.div>
             </motion.div>
           </AnimatePresence>
           <motion.div
