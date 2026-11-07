@@ -15,6 +15,7 @@ import {
 import { Scenery } from "@/components/game/Scenery";
 import { Mascot, type Mood } from "@/components/game/Mascot";
 import { tileColor } from "@/components/game/tileColors";
+import { WordPicture } from "@/components/game/WordPicture";
 import { Button } from "@/components/ui/button";
 import {
   LEVELS,
